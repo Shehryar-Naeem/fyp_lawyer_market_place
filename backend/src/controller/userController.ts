@@ -190,4 +190,58 @@ const updateProfile = TryCatch(
   }
 );
 
-export {loginOrCreateUser,getProfleData,completeLawyerProfile,logout,updateProfile};
+const getAllUser = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.find();
+    const totalUserLength  =await User.countDocuments();
+    res.status(200).json({
+      success: true,
+      message: "All User",
+      users,
+      totaluser:totalUserLength
+    });
+  }
+);
+const updateProfileByadmin = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id as string;
+    const user = await User.findOne({ _id: id });
+
+    if (!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+
+    const updatedFields = req.body;
+
+    Object.keys(updatedFields).forEach((key) => {
+      // Use type assertion here if necessary
+      (user as any)[key] = updatedFields[key];
+    });
+
+    // Save the updated user
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user,
+    });
+
+  }
+);
+const deleteUserByAdmin = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id as string;
+    const user = await User.findOne({ _id: id });
+
+    if (!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+    await User.findByIdAndDelete(id);
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+
+  }
+);
+export {loginOrCreateUser,getProfleData,completeLawyerProfile,logout,updateProfile,getAllUser,deleteUserByAdmin,updateProfileByadmin};

@@ -7,8 +7,6 @@ import { AuthenticatedRequest, DecodedJwtPayload } from "../types/types.js";
 
 export const isAuthenticatedUser = TryCatch(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    
-    
     const { token } = req.cookies;
     if (!token) {
       return next(
@@ -23,3 +21,17 @@ export const isAuthenticatedUser = TryCatch(
     next();
   }
 );
+
+export const authorizeRoles = (...roles: string[]) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (!roles.includes(req.user?.role as string)) {
+      return next(
+        new ErrorHandler(
+          `Role (${req.user?.role}) is not allowed to access this resource`,
+          403
+        )
+      );
+    }
+    next();
+  };
+};
