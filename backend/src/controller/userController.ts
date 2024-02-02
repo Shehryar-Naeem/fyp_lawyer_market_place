@@ -1,10 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { NewUserRequestBody } from "../types/types.js";
+import {
+  AuthenticatedRequest,
+  CombinedType,
+  IUpdateUser,
+  IUser,
+  NewUserRequestBody,
+  updateAuthenticatedRequest,
+} from "../types/types.js";
 import { User } from "../models/userModel/userModel.js";
 import { TryCatch } from "../middleware/error.js";
 import { ErrorHandler } from "../utils/utility-class.js";
 import { Laywer } from "../models/userModel/laywerModel.js";
 import { Client } from "../models/userModel/clientModel.js";
+import sendToken from "../utils/jwtToken.js";
+import { exit } from "process";
 
 const loginOrCreateUser = async (
   req: Request<{}, {}, NewUserRequestBody>,
@@ -14,33 +23,39 @@ const loginOrCreateUser = async (
   const { name, email, password, role } = req.body;
   const userRole = role || "client";
 
-  const user = await User.findOne({ email });
-  if (!user) {
+  const existingUser = await await User.findOne({
+    email: {
+      $regex: email,
+      $options: "i",
+    },
+  }).select("+password");
+
+  if (!existingUser) {
     const newUser = await User.create({
       name,
       email,
       password,
-      role :userRole,
+      role: userRole,
     });
 
-    return res.status(201).json({
-      success: true,
-      message: "user Register Successfully",
-      newUser,
-    });
+    const msg: string = "user Register Successfully";
+
+    sendToken(newUser as CombinedType, 201, res, msg);
+  } else {
+    const isPasswordMatched = await existingUser.comparePassword(password);
+    if (!isPasswordMatched) {
+      return next(new ErrorHandler("Invalid email or password", 401));
+    }
+    const msg: string = "user login Successfully";
+
+    sendToken(existingUser as CombinedType, 201, res, msg);
   }
-  return res.status(201).json({
-    success: true,
-    message: "user login Successfully",
-    user,
-  });
 };
+
 const completeLawyerProfile = TryCatch(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const user = await User.findOne({ _id: req.params.id }).select("+password");
-
-    console.log(user);
-
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const id = req.user?._id;
+    const user = await User.findOne({ _id: id }).select("+password");
     if (!user) {
       return next(new ErrorHandler("user not found", 404));
     }
@@ -53,7 +68,6 @@ const completeLawyerProfile = TryCatch(
         yourSelf,
         address,
         cnic,
-
         gender,
         dob,
       } = req.body;
@@ -117,22 +131,63 @@ const completeLawyerProfile = TryCatch(
         message: "profle created Successfully",
         client,
       });
-    }else{
+    } else {
       return next(new ErrorHandler("user not found", 404));
     }
   }
 );
+
 const getProfleData = TryCatch(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const user = await User.findById(req.params.id);
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const id = req.user?._id;
+    const user = await User.findById({ _id: id });
     if (!user) {
       return next(new ErrorHandler("user not found", 404));
     }
     res.status(200).json({
       success: true,
+      message: "profle Successfully fetched",
       user,
     });
   }
 );
+const logout = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    });
+    res.status(200).json({
+      success: true,
+      message: "Logged Out",
+    });
+  }
+);
+const updateProfile = TryCatch(
+  async (req: updateAuthenticatedRequest, res: Response, next: NextFunction) => {
+    const id = req.user?._id as string;
+    const user = await User.findOne({ _id: id });
 
-export { loginOrCreateUser, getProfleData, completeLawyerProfile };
+    if (!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+
+    const updatedFields = req.body;
+
+    Object.keys(updatedFields).forEach((key) => {
+      // Use type assertion here if necessary
+      (user as any)[key] = updatedFields[key];
+    });
+
+    // Save the updated user
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user,
+    });
+
+  }
+);
+
+export {loginOrCreateUser,getProfleData,completeLawyerProfile,logout,updateProfile};

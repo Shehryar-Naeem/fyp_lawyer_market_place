@@ -1,14 +1,10 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import { IUser, ILawyer } from "../../types/types.js";
-
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema(
   {
-    // _id: {
-    //   type: String,
-    //   required: [true, "Please Enter Your ID"],
-    //   unique: true,
-    // },
     name: {
       type: String,
       required: [true, "Please Enter Your Name"],
@@ -47,14 +43,28 @@ const userSchema = new mongoose.Schema(
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
-   
   },
   {
     timestamps: true,
   }
 );
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
 
+  this.password = await bcrypt.hash(this.password, 10);
+});
+userSchema.methods.comparePassword = async function (password:string) {
+  return await bcrypt.compare(password, this.password);
+};
+userSchema.methods.getJWTToken = function () {
+  const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET as string, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
 
+  return token;
+};
 const User = mongoose.model<IUser>("User", userSchema);
 
 export { User };

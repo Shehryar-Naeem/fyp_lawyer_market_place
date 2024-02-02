@@ -1,11 +1,14 @@
 import express from "express";
+import  cookieParser  from "cookie-parser";
 import connectDb from "./DB/db.js";
 import dotenv from 'dotenv';
 import { errorMiddlerware } from "./middleware/error.js";
 import userRouter from "./routes/userRoute.js";
+
 // require("dotenv").config();
 dotenv.config();
 const app = express();
+app.use(cookieParser());
 
 
 
