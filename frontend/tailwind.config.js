@@ -22,12 +22,13 @@ module.exports = {
       },
       colors: {
         'primary': "#000000",
-        " ": "#ffffff",
+        "white ": "#ffffff",
         "slate-gray": "#6D6D6D",
         "pale-blue": "#F5F6FF",
         "white-400": "rgba(255, 255, 255, 0.80)"
       },
       gap: {
+        "sm":"6px",
         "1":"12px",
         "2":"25px",
         "3":"35px"

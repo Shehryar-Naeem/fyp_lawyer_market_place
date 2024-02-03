@@ -18,7 +18,7 @@ body{
     margin: 0 auto;
   }
   .black-btn{
-    @apply bg-black text-white w-full md:text-base text-sm md:mx-auto md:py-3 py-2 md:px-4 px-2 rounded-md capitalize md:hover:shadow-2xl shadow-none ;
+    @apply bg-black text-white w-full md:text-xl font-bold  font-semibold text-sm md:mx-auto md:py-3 py-2 md:px-4 px-2 rounded-md uppercase md:hover:shadow-2xl shadow-none ;
   } 
   .item-center{
     @apply flex items-center justify-center;

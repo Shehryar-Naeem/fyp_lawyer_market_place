@@ -13,8 +13,9 @@ const SignUp = () => {
         <div className="flex flex-col gap-2">
           <InputComp text="name" />
           <InputComp text="email" />
-          <div>
+          <div className="flex flex-col w-full gap-sm cursor-pointer text-slate-gray capitalize">
             <InputComp text="password" />
+            <span className="text-right">forget password</span>
           </div>
           <button className="black-btn">sign up</button>
         </div>
@@ -22,10 +23,13 @@ const SignUp = () => {
       <div className="flex flex-col gap-1">
         <p>Or Sign up Using</p>
         <div className="item-center">
-          <img src={Images.Google} alt="google" className="w-icon-width cursor-pointer"/>
+          <img
+            src={Images.Google}
+            alt="google"
+            className="w-icon-width cursor-pointer"
+          />
         </div>
       </div>
-
     </div>
   );
 };
