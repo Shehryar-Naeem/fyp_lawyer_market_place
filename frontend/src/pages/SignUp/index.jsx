@@ -1,6 +1,7 @@
 import React from "react";
 import InputComp from "../../components/InputComp";
 import { Images } from "../../assets/images/index";
+import BlackBtn from "../../components/BlackBtn";
 const SignUp = () => {
   return (
     <div className="sign-padding flex-col item-center max-w-screen-sm  m-auto gap-2 md:p-0 p-4">
@@ -17,7 +18,7 @@ const SignUp = () => {
             <InputComp text="password" />
             <span className="text-right">forget password</span>
           </div>
-          <button className="black-btn">sign up</button>
+          <BlackBtn text={"sign up"}/>
         </div>
       </form>
       <div className="flex flex-col gap-1">
