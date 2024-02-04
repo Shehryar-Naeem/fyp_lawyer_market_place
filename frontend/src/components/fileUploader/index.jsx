@@ -3,7 +3,7 @@ import { Images } from "../../assets/images";
 
 const FileUploader = () => {
   return (
-    <div className="max-w-max-w-img w-full h-img-height">
+    <div className="md:w-img w-sm-img md:h-img-height h-sm-img-height ">
       <label
         for="dropzone-file"
         className="flex flex-col items-center justify-center h-full border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 overflow-hidden shadow-2xl relative"

@@ -39,13 +39,19 @@ module.exports = {
       backgroundImage: {
         gradient: "linear-gradient(to right,#D9D9D9 42%,#ffffff 42% 100%)"
       },
-      
-      maxWidth: {
-        "max-w-img": "150px",
+      borderRadius:{
+        "sm":"6px",
+        "md":"12px",
+        "lg":"18px",
+      },
+      width: {
+        "img": "150px",
+        "sm-img": "100px",
         "max-w-input":"900px"
       },
       height: {
         "img-height": "150px",
+        "sm-img-height": "100px",
       },
       borderRadius: {
         full: "100%",
