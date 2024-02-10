@@ -6,6 +6,7 @@ const sendToken = (
   statusCode: number,
   res: Response,
   msg: string
+  
 ) => {
   const token = user.getJWTToken();
   // options for cookie

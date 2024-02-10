@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "node_modules/flowbite-react/lib/esm/**/*.tsx",
+    "node_modules/flowbite-react/lib/esm/**/*.js",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
@@ -17,13 +17,22 @@ module.exports = {
       "8xl": ["96px", "106px"],
     },
     extend: {
+      padding: {
+        "ly-pad": "20px",
+        "md-ly-pad": "15px",
+        "sm-ly-pad": "08px",
+        0.5: "6px",
+        1: "12px",
+        2: "18px",
+      },
       width: {
         "icon-width": "30px",
       },
       colors: {
-        "primary": "#000000",
+        primary: "#000000",
         "white ": "#ffffff",
         "slate-gray": "#D9D9D9",
+        "black-50": "rgba(0, 0, 0, 0.5)",
         "pale-blue": "#F5F6FF",
         "white-400": "rgba(255, 255, 255, 0.80)",
       },
@@ -37,18 +46,18 @@ module.exports = {
         "2xl": "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
       },
       backgroundImage: {
-        gradient: "linear-gradient(to right,#D9D9D9 42%,#ffffff 42% 100%)"
+        gradient: "linear-gradient(to right,#D9D9D9 42%,#ffffff 42% 100%)",
       },
-      borderRadius:{
-        "sm":"6px",
-        "md":"12px",
-        "lg":"18px",
+      borderRadius: {
+        sm: "6px",
+        md: "12px",
+        lg: "18px",
       },
       width: {
-        "img": "150px",
+        img: "150px",
         "sm-img": "100px",
         "icon-width": "30px",
-        "max-w-input":"900px"
+        "max-w-input": "900px",
       },
       height: {
         "img-height": "150px",
@@ -59,7 +68,7 @@ module.exports = {
       },
       borderRadius: {
         full: "100%",
-        '1':"6px"
+        1: "6px",
       },
     },
   },

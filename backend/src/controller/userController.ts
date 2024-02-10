@@ -10,12 +10,7 @@ import {
 import { User } from "../models/userModel/userModel.js";
 import { TryCatch } from "../middleware/error.js";
 import { ErrorHandler } from "../utils/utility-class.js";
-import { Laywer } from "../models/userModel/laywerModel.js";
-import { Client } from "../models/userModel/clientModel.js";
 import sendToken from "../utils/jwtToken.js";
-import { exit } from "process";
-import mongoose from "mongoose";
-import { Role } from "../models/userModel/roleModel.js";
 
 const loginOrCreateUser = async (
   req: Request<{}, {}, NewUserRequestBody>,
@@ -171,30 +166,33 @@ const updateProfile = TryCatch(
     res: Response,
     next: NextFunction
   ) => {
-    const id = req.user?._id as string;
-    const user = await User.findOne({ _id: id });
+    const userId = req.user?._id as string;
 
-    if (!user) {
-      return next(new ErrorHandler("User not found", 404));
+    try {
+      const updatedFields = req.body;
+
+      // Find the user by ID and update the fields
+      const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, {
+        new: true, // Return the updated document
+        runValidators: true, // Run validators to ensure data consistency
+      });
+
+      if (!updatedUser) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+        user: updatedUser,
+      });
+    } catch (error) {
+      // Handle errors, log, and/or return appropriate responses
+      console.error(error);
+      next(error);
     }
-
-    const updatedFields = req.body;
-
-    Object.keys(updatedFields).forEach((key) => {
-      // Use type assertion here if necessary
-      (user as any)[key] = updatedFields[key];
-    });
-
-    // Save the updated user
-    await user.save();
-    res.status(200).json({
-      success: true,
-      message: "User updated successfully",
-      user,
-    });
   }
 );
-
 const getAllUser = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const users = await User.find();

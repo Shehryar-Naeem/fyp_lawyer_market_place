@@ -11,10 +11,8 @@ body {
   line-height: 1.5;
   min-height: 100vh;
   height: 100%;
-  
 }
-#root{
-
+#root {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -45,8 +43,8 @@ input[type="number"] {
 }
 
 @layer utilities {
-  .sign-padding {
-    @apply md:my-20 my-12;
+  .layout-pad {
+    @apply lg:p-ly-pad md:p-md-ly-pad p-sm-ly-pad;
   }
 
   .pad-y {
@@ -58,16 +56,20 @@ input[type="number"] {
   .field-legend {
     @apply capitalize p-2 bg-slate-gray leading-none lg:text-2xl  md:text-xl text-sm md:font-bold font-semibold;
   }
-  .input-lable{
-    @apply block mb-2 md:text-lg  text-sm font-medium text-primary dark:text-green-500 capitalize
+  .input-lable {
+    @apply block mb-2 md:text-lg  text-sm font-medium text-primary dark:text-green-500 capitalize;
   }
-  .border{
+  .border {
     @apply border-1 border-solid border-black;
+  }
+  .icon{
+    @apply text-2xl cursor-pointer text-black-50;
   }
 }
 
-@media screen and (max-width: 912px){
- #root{
-   position: relative;
- } 
+@media screen and (max-width: 912px) {
+  #root {
+    position: relative;
+    
+  }
 }

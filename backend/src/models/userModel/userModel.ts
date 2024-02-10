@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     yourSelf: {
       type: String,
+      default:null
       // required: [true, "Please Enter Your Self Description"],
     },
     roles: [
@@ -56,10 +57,14 @@ const userSchema = new mongoose.Schema<IUser>(
     gender: {
       type: String,
       enum: ["male", "female"],
+      default:null
+
       // required: [true, "Please enter Gender"],
     },
     dob: {
       type: Date,
+      default:null
+
       // required: [true, "Please enter Date of birth"],
     },
     resetPasswordToken: String,
