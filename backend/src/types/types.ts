@@ -1,25 +1,34 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import { Document, ObjectId, Types } from "mongoose";
+import mongoose, { Document, ObjectId, Types } from "mongoose";
 
 type avatar = {
-  public_id: string;
+  public_id: ObjectId;
   url: string;
 };
+export interface IRoles  {
+  _id:  mongoose.Types.ObjectId;
+  roleType: "client" | "lawyer" | "admin";
+}
+
 export interface IUser {
   _id: string;
   name: string;
   email: string;
   password: string;
   avatar: avatar;
-  role: "client" | "lawyer" | "admin";
   resetPasswordToken: string;
   resetPasswordExpire: Date;
+  yourSelf?: string;
+  roles: IRoles[];
+  gender: "male" | "female";
+  dob?: Date;
+  age?: number;
   getJWTToken: () => string;
   comparePassword: (password: string) => Promise<boolean>;
 }
 export interface ILawyer {
-  user:ObjectId,
+  user: ObjectId;
   designation: string;
   experience: number;
   education: string;
@@ -29,21 +38,22 @@ export interface ILawyer {
   documents: avatar[];
   gender: "male" | "female";
   dob: Date;
-  cnic:number;
+  cnic: number;
   age: number;
 }
 export interface IClient {
-  user:ObjectId, 
+  user: ObjectId;
   phone: number;
   yourSelf: string;
   address: string;
   documents: avatar[];
   gender: "male" | "female";
-  cnic:number;
+  cnic: number;
   age: number;
 }
-
-
+export interface IRole {
+  roleName: "client" | "lawyer" | "admin";
+}
 export interface NewUserRequestBody {
   name: string;
   email: string;
@@ -56,12 +66,13 @@ export type ControllerFunc = (
   next: NextFunction
 ) => Promise<void | Response<any, Record<string, any>>>;
 
-export type CombinedType = Document<unknown, {}, IUser> & IUser & {
-  _id: Types.ObjectId;
-};
+export type CombinedType = Document<unknown, {}, IUser> &
+  IUser & {
+    _id: Types.ObjectId;
+  };
 
 export interface AuthenticatedRequest extends Request {
-  user?: IUser| null; 
+  user?: IUser | null;
 }
 export interface IUpdateUser {
   _id?: string;
@@ -72,9 +83,9 @@ export interface IUpdateUser {
 }
 
 export interface updateAuthenticatedRequest extends Request {
-  user?: IUpdateUser| null; 
+  user?: IUpdateUser | null;
 }
 
 export interface DecodedJwtPayload extends JwtPayload {
-  id: string; 
+  id: string;
 }

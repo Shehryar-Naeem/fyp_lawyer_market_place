@@ -22,16 +22,16 @@ export const isAuthenticatedUser = TryCatch(
   }
 );
 
-export const authorizeRoles = (...roles: string[]) => {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    if (!roles.includes(req.user?.role as string)) {
-      return next(
-        new ErrorHandler(
-          `Role (${req.user?.role}) is not allowed to access this resource`,
-          403
-        )
-      );
-    }
-    next();
-  };
-};
+// export const authorizeRoles = (...roles: string[]) => {
+//   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+//     if (!roles.includes(req.user?.roles as string)) {
+//       return next(
+//         new ErrorHandler(
+//           `Role (${req.user?.roles}) is not allowed to access this resource`,
+//           403
+//         )
+//       );
+//     }
+//     next();
+//   };
+// };

@@ -1,8 +1,9 @@
+
 import React from 'react'
 
 const BlackBtn = ({text}) => {
   return (
-    <button className="black-btn">{text}</button>
+    <input type='submit' value={text} className="black-btn"/>
   )
 }
 

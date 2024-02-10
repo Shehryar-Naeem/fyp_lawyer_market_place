@@ -3,7 +3,10 @@ import validator from "validator";
 import { IUser, ILawyer } from "../../types/types.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-const userSchema = new mongoose.Schema(
+import { Client } from "./clientModel.js";
+import { Laywer } from "./laywerModel.js";
+import { log } from "console";
+const userSchema = new mongoose.Schema<IUser>(
   {
     name: {
       type: String,
@@ -23,12 +26,6 @@ const userSchema = new mongoose.Schema(
       minLength: [8, "Password should be greater than 8 characters"],
       select: false,
     },
-    role: {
-      type: String,
-      enum: ["client", "lawyer", "admin"],
-      default: "client",
-      required: [true, "Please Enter Your Role"],
-    },
     avatar: {
       public_id: {
         type: String,
@@ -41,6 +38,30 @@ const userSchema = new mongoose.Schema(
           "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw3yZ4ihZhlPWhab5e20wjxe&ust=1681274559120000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCMif9PeBof4CFQAAAAAdAAAAABAE",
       },
     },
+    yourSelf: {
+      type: String,
+      // required: [true, "Please Enter Your Self Description"],
+    },
+    roles: [
+      {
+        roleType: {
+          type: String,
+          enum: ["client", "admin", "lawyer"],
+          default: "client", // Default role is set to "client"
+          unique: true,
+        },
+        _id: { type: mongoose.Schema.Types.ObjectId },
+      },
+    ],
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      // required: [true, "Please enter Gender"],
+    },
+    dob: {
+      type: Date,
+      // required: [true, "Please enter Date of birth"],
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
@@ -48,6 +69,55 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.virtual("age").get(function () {
+  const today = new Date();
+  const dob = this.dob as Date;
+  let age = today.getFullYear() - dob.getFullYear();
+
+  if (
+    today.getMonth() < dob.getMonth() ||
+    (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
+  ) {
+    age--;
+  }
+
+  return age;
+});
+userSchema.pre("save", async function (next) {
+  const clientId = new mongoose.Types.ObjectId();
+  const lawyerId = new mongoose.Types.ObjectId();
+
+  const hasClientRole = this.roles.some(role => role.roleType === "client");
+  const hasLawyerRole = this.roles.some(role => role.roleType === "lawyer");
+
+  if (!hasClientRole) {
+    const clientId = new mongoose.Types.ObjectId();
+    this.roles.push({ _id: clientId, roleType: "client" });
+    const client = new Client({ _id: clientId, user: this._id });
+    await client.save();
+  }
+
+  if (!hasLawyerRole) {
+    const lawyerId = new mongoose.Types.ObjectId();
+    this.roles.push({ _id: lawyerId, roleType: "lawyer" });
+    const lawyer = new Laywer({ _id: lawyerId, user: this._id });
+    await lawyer.save();
+  }
+
+
+  // Add both client and lawyer roles to the user
+  // this.roles.push({ _id: clientId, roleType: "client" });
+  // this.roles.push({ _id: lawyerId, roleType: "lawyer" });
+
+  // const client = new Client({ _id: clientId, user: this._id });
+  // const lawyer = new Laywer({ _id: lawyerId, user: this._id });
+
+  // Save both client and lawyer records
+  // Promise.all([client.save(), lawyer.save()])
+  //   .then(() => next())
+  //   .catch((err) => next(err));
+});
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
@@ -55,7 +125,9 @@ userSchema.pre("save", async function (next) {
 
   this.password = await bcrypt.hash(this.password, 10);
 });
-userSchema.methods.comparePassword = async function (password:string) {
+userSchema.methods.comparePassword = async function (password: string) {
+ 
+  
   return await bcrypt.compare(password, this.password);
 };
 userSchema.methods.getJWTToken = function () {

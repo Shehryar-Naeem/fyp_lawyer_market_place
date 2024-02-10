@@ -5,9 +5,11 @@ import dotenv from 'dotenv';
 import { errorMiddlerware } from "./middleware/error.js";
 import userRouter from "./routes/userRoute.js";
 
+import cors from "cors"
 // require("dotenv").config();
 dotenv.config();
 const app = express();
+app.use(cors());
 app.use(cookieParser());
 
 

@@ -47,14 +47,19 @@ module.exports = {
       width: {
         "img": "150px",
         "sm-img": "100px",
+        "icon-width": "30px",
         "max-w-input":"900px"
       },
       height: {
         "img-height": "150px",
         "sm-img-height": "100px",
       },
+      borderWidth: {
+        1: "1px",
+      },
       borderRadius: {
         full: "100%",
+        '1':"6px"
       },
     },
   },
