@@ -16,6 +16,8 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
+  city?: string;
+  postalCode?: number;
   avatar: avatar;
   resetPasswordToken: string;
   resetPasswordExpire: Date;

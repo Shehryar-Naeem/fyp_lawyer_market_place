@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useUpdateUserMutation } from "../../redux/api/userApi";
-import toast from "react-hot-toast";
 
-const UserModel = ({ modal, setModal, name, email }) => {
+const UserModel = ({ modal, setModal, name, email, updateUser }) => {
   const [username, setName] = useState("");
   const [useremail, setEmail] = useState("");
-  const [updateUser, { error, data, isLoading, isSuccess }] =
-    useUpdateUserMutation();
-
   useEffect(() => {
-    if (error?.data.message === false) {
-      toast.error("user not updated");
-    }
-    if (isSuccess) {
-      toast.success("user updated");
-    }
     setName(name);
     setEmail(email);
-  }, [isSuccess, error]);
+  }, [name, email]);
   const updateHandler = (e) => {
     e.preventDefault();
-    updateUser({ name: username, email: useremail }); 
-    setModal(!modal);
+
+    updateUser({ name: username, email: useremail });
   };
-  
+
   return (
     <div className="item-center backdrop-blur-sm bg-black-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full">
       <div className="relative p-4 w-full max-w-md max-h-full">

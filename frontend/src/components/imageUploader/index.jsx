@@ -1,7 +1,7 @@
 import React from "react";
 import { Images } from "../../assets/images";
 
-const FileUploader = () => {
+const ImageUploader = () => {
   return (
     <div className="md:w-img w-sm-img md:h-img-height h-sm-img-height ">
       <label
@@ -34,4 +34,4 @@ const FileUploader = () => {
   );
 };
 
-export default FileUploader;
+export default ImageUploader;

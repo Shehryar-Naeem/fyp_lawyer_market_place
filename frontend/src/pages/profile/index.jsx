@@ -1,7 +1,7 @@
 import React from "react";
 import PageHeading from "../../components/pageHeading";
 import RadioBtn from "../../components/radioButton";
-import FileUploader from "../../components/fileUploader";
+import ImageUploader from "../../components/imageUploader";
 import BlackBtn from "../../components/BlackBtn";
 import ProfileInputComp from "../../components/ProfileInputComp";
 
@@ -11,7 +11,7 @@ const Profile = () => {
       <PageHeading text="profile detail" />
       <form className="flex flex-col gap-3 md:mx-0 mx-2 ">
         <div className="item-center">
-          <FileUploader />
+          <ImageUploader />
         </div>
         <div className="flex flex-col flex-wrap  gap-2">
           <fieldset className="fieldset-border">

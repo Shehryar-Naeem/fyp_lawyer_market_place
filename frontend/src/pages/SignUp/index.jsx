@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import InputComp from "../../components/InputComp";
-import { Images } from "../../assets/images/index";
 import BlackBtn from "../../components/BlackBtn";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import toast from "react-hot-toast";
 import { useSignupMutation } from "../../redux/api/userApi";
 import AuthWithGoogle from "../../components/AuthWithGoogle";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, } from "react-redux";
 import { userExist } from "../../redux/reducer/userReducer";
 const SignUp = () => {
-  const [signup, { isLoading, data, isError, isSuccess, error }] =
+  const [signup, {  data, isError, isSuccess, error }] =
     useSignupMutation();
 
   const [name, setName] = useState("");
@@ -46,13 +45,13 @@ const SignUp = () => {
     if (isError) {
       toast.error(error.data.message);
     }
-  }, [isSuccess, isError, error, dispatch]);
+  }, [isSuccess, isError, error, dispatch,data?.user,data?.msg]);
   const submitHandler = (e) => {
     e.preventDefault();
     signup({ name, email, password });
   };
   return (
-    <div className="h-full flex-col item-center max-w-screen-sm  m-auto gap-2 md:p-0 p-4">
+    <div className="container h-full flex-col item-center max-w-screen-sm  m-auto gap-2 md:p-0 p-4">
       <div className="w-full">
         <h1 className="lg:text-4xl md:text-2xl text-xl text-center font-black capitalize text-primary">
           sign up

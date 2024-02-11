@@ -20,7 +20,7 @@ function App() {
     // Check for success or error
     if (isSuccess) {
       dispatch(userExist(data.user));
-      
+
       toast.success(data?.message);
     }
     if (isError) {
@@ -28,17 +28,18 @@ function App() {
       toast.error(error.data?.message);
     }
   }, [isLoading, isSuccess, isError, data, error, dispatch]);
+
   return (
     <Router>
-      <div className="container h-full">
-        <Suspense>
+      <Suspense>
+        <div className="h-full">
           <Routes>
             <Route path="/" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/user-profile" element={<UserProfile />} />
           </Routes>
-        </Suspense>
-      </div>
+        </div>
+      </Suspense>
       <Toaster position="top-right" />
     </Router>
   );

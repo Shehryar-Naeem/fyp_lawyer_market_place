@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Client } from "./clientModel.js";
 import { Laywer } from "./laywerModel.js";
-import { log } from "console";
+
 const userSchema = new mongoose.Schema<IUser>(
   {
     name: {
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     yourSelf: {
       type: String,
-      default:null
+      default: null,
       // required: [true, "Please Enter Your Self Description"],
     },
     roles: [
@@ -57,13 +57,22 @@ const userSchema = new mongoose.Schema<IUser>(
     gender: {
       type: String,
       enum: ["male", "female"],
-      default:null
+      default: null,
 
       // required: [true, "Please enter Gender"],
     },
+    postalCode: {
+      type: Number,
+      default: null,
+    },
+    city: {
+      type: String,
+      default: null,
+    },
+
     dob: {
       type: Date,
-      default:null
+      default: null,
 
       // required: [true, "Please enter Date of birth"],
     },
@@ -93,8 +102,8 @@ userSchema.pre("save", async function (next) {
   const clientId = new mongoose.Types.ObjectId();
   const lawyerId = new mongoose.Types.ObjectId();
 
-  const hasClientRole = this.roles.some(role => role.roleType === "client");
-  const hasLawyerRole = this.roles.some(role => role.roleType === "lawyer");
+  const hasClientRole = this.roles.some((role) => role.roleType === "client");
+  const hasLawyerRole = this.roles.some((role) => role.roleType === "lawyer");
 
   if (!hasClientRole) {
     const clientId = new mongoose.Types.ObjectId();
@@ -109,7 +118,6 @@ userSchema.pre("save", async function (next) {
     const lawyer = new Laywer({ _id: lawyerId, user: this._id });
     await lawyer.save();
   }
-
 
   // Add both client and lawyer roles to the user
   // this.roles.push({ _id: clientId, roleType: "client" });
@@ -131,8 +139,6 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 userSchema.methods.comparePassword = async function (password: string) {
- 
-  
   return await bcrypt.compare(password, this.password);
 };
 userSchema.methods.getJWTToken = function () {

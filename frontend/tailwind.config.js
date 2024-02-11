@@ -1,13 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "node_modules/flowbite-react/lib/esm/**/*.js",
     "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
     fontSize: {
-      xs: ["12px", "16px"],
-      sm: ["14px", "20px"],
+      xs: ["10px", "12.19px"],
+      sm: ["12px", "16px"],
       base: ["16px", "19.5px"],
       lg: ["18px", "21.94px"],
       xl: ["20px", "24.38px"],
@@ -55,13 +55,13 @@ module.exports = {
       },
       width: {
         img: "150px",
-        "sm-img": "100px",
+        "sm-img": "50px",
         "icon-width": "30px",
         "max-w-input": "900px",
       },
       height: {
         "img-height": "150px",
-        "sm-img-height": "100px",
+        "sm-img-height": "50px",
       },
       borderWidth: {
         1: "1px",
