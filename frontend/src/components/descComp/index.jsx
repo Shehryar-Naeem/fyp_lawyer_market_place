@@ -16,8 +16,8 @@ const DesComp = ({ compData, show, setshow }) => {
       setshow(false);
       dispatch(userExist(data?.user));
     }
-    if(error.data.message){
-      toast.error(error.data.message);
+    if (error?.data.message) {
+      toast.error(error?.data.message);
     }
   }, [data, isSuccess, dispatch]);
   const update = (e) => {
@@ -26,13 +26,13 @@ const DesComp = ({ compData, show, setshow }) => {
   };
   return (
     <form>
-      <div className="text-center bg-gray-200 rounded-md md:p-sm-ly-pad p-0.5 flex flex-col gap-sm">
+      <div className="profile-edit-container">
         <textarea
           id="message"
           rows="5"
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
-          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Write your thoughts here..."
         ></textarea>
         <div className="flex-column gap-sm">

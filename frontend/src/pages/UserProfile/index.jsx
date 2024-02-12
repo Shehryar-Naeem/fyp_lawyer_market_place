@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import ProfileComp from "../../components/profileComp";
 import DesComp from "../../components/descComp";
 import GenderComp from "../../components/genderComp";
+import DateSetter from "../../components/datePicker";
 
 const UserProfile = () => {
   const { user, loading } = useSelector((state) => state.userReducer);
@@ -62,7 +63,7 @@ const UserProfile = () => {
                   tooltip={"Edit your gender"}
                   Comp={GenderComp}
                 />
-                <ProfileComp label={"DOB"} data={user?.dob} />
+                <ProfileComp label={"DOB"} data={user?.dob} Comp={DateSetter} />
                 <ProfileComp label={"age"} data={user?.age} />
                 <ProfileComp label={"city"} data={user?.city} />
                 <ProfileComp label={"postal code "} data={user?.postalCode} />

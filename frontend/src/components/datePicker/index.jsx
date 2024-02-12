@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState ,useEffect} from "react";
+import { DatePicker } from "antd";
 import { useUpdateUserMutation } from "../../redux/api/userApi";
 import { userExist } from "../../redux/reducer/userReducer";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
-const GenderComp = ({ compData, show, setshow }) => {
+const DateSetter = ({ compData, show, setshow }) => {
   const dispatch = useDispatch();
-  const [gender, setGender] = useState("");
 
+  const [date, setDate] = useState(new Date());
   const [updateUser, { data, isSuccess,isError,error }] = useUpdateUserMutation();
-
+  function onChange(date, dateString) {
+    setDate(date);
+  }
+  
   useEffect(() => {
-    setGender(compData);
+    setDate(compData);
     if (isSuccess) {
       toast.success(data?.message);
       setshow(false);
@@ -23,20 +27,11 @@ const GenderComp = ({ compData, show, setshow }) => {
   }, [data, isSuccess, dispatch]);
   const update = (e) => {
     e.preventDefault();
-    updateUser({ gender: gender });
+    updateUser({ dob: date });
   };
   return (
     <div className="profile-edit-container">
-      <select
-        id="gender"
-        onChange={(e) => setGender(e.target.value)}
-        value={gender}
-        className="bg-gray-50 border capitalize border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full md:p-2.5 p-0.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option value="">select gender</option>
-        <option value="male">male</option>
-        <option value="female">female</option>
-      </select>
+      <DatePicker onChange={onChange}  />
       <div className="flex-column gap-sm">
         <button
           type="button"
@@ -45,7 +40,9 @@ const GenderComp = ({ compData, show, setshow }) => {
         >
           cancel
         </button>
-        <button onClick={update} type="button" className="blue-btn">
+        <button 
+        onClick={update}
+         type="button" className="blue-btn">
           update
         </button>
       </div>
@@ -53,4 +50,4 @@ const GenderComp = ({ compData, show, setshow }) => {
   );
 };
 
-export default GenderComp;
+export default DateSetter;
