@@ -10,6 +10,9 @@ import ProfileComp from "../../components/profileComp";
 import DesComp from "../../components/descComp";
 import GenderComp from "../../components/genderComp";
 import DateSetter from "../../components/datePicker";
+import PostalCode from "../../components/postalCode";
+import City from "../../components/city";
+
 
 const UserProfile = () => {
   const { user, loading } = useSelector((state) => state.userReducer);
@@ -65,8 +68,12 @@ const UserProfile = () => {
                 />
                 <ProfileComp label={"DOB"} data={user?.dob} Comp={DateSetter} />
                 <ProfileComp label={"age"} data={user?.age} />
-                <ProfileComp label={"city"} data={user?.city} />
-                <ProfileComp label={"postal code "} data={user?.postalCode} />
+                <ProfileComp label={"city"} data={user?.city} Comp={City} />
+                <ProfileComp
+                  label={"postal code "}
+                  data={user?.postalCode}
+                  Comp={PostalCode}
+                />
               </div>
             </div>
             <div className="col-span-3 flex flex-col md:gap-1 gap-sm">

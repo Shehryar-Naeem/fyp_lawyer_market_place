@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import { IUser, ILawyer } from "../../types/types.js";
+import { IUser } from "../../types/types.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Client } from "./clientModel.js";
-import { Laywer } from "./laywerModel.js";
+import { Lawyer } from "./laywerModel.js";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -45,13 +45,9 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     roles: [
       {
-        roleType: {
-          type: String,
-          enum: ["client", "admin", "lawyer"],
-          default: "client", // Default role is set to "client"
-          unique: true,
-        },
-        _id: { type: mongoose.Schema.Types.ObjectId },
+        type: String,
+        enum: ["client", "admin", "lawyer"],
+        default: "client", // Default role is set to "client"
       },
     ],
     gender: {
@@ -61,20 +57,9 @@ const userSchema = new mongoose.Schema<IUser>(
 
       // required: [true, "Please enter Gender"],
     },
-    postalCode: {
-      type: Number,
-      default: null,
-    },
     city: {
       type: String,
       default: null,
-    },
-
-    dob: {
-      type: Date,
-      default: null,
-
-      // required: [true, "Please enter Date of birth"],
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
@@ -84,23 +69,11 @@ const userSchema = new mongoose.Schema<IUser>(
   }
 );
 
-userSchema.virtual("age").get(function () {
-  const today = new Date();
-  const dob = this.dob as Date;
-  let age = today.getFullYear() - dob.getFullYear();
 
-  if (
-    today.getMonth() < dob.getMonth() ||
-    (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
-  ) {
-    age--;
-  }
 
-  return age;
-});
 userSchema.pre("save", async function (next) {
-  const clientId = new mongoose.Types.ObjectId();
-  const lawyerId = new mongoose.Types.ObjectId();
+  // const clientId = new mongoose.Types.ObjectId();
+  // const lawyerId = new mongoose.Types.ObjectId();
 
   const hasClientRole = this.roles.some((role) => role.roleType === "client");
   const hasLawyerRole = this.roles.some((role) => role.roleType === "lawyer");
@@ -115,7 +88,7 @@ userSchema.pre("save", async function (next) {
   if (!hasLawyerRole) {
     const lawyerId = new mongoose.Types.ObjectId();
     this.roles.push({ _id: lawyerId, roleType: "lawyer" });
-    const lawyer = new Laywer({ _id: lawyerId, user: this._id });
+    const lawyer = new Lawyer({ _id: lawyerId, user: this._id });
     await lawyer.save();
   }
 

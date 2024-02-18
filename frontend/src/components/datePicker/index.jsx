@@ -30,6 +30,7 @@ const DateSetter = ({ compData, show, setshow }) => {
     updateUser({ dob: date });
   };
   return (
+    
     <div className="profile-edit-container">
       <DatePicker onChange={onChange}  />
       <div className="flex-column gap-sm">

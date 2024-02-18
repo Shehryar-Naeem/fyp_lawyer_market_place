@@ -6,8 +6,8 @@ type avatar = {
   public_id: ObjectId;
   url: string;
 };
-export interface IRoles  {
-  _id:  mongoose.Types.ObjectId;
+export interface IRoles {
+  _id: mongoose.Types.ObjectId;
   roleType: "client" | "lawyer" | "admin";
 }
 
@@ -17,31 +17,37 @@ export interface IUser {
   email: string;
   password: string;
   city?: string;
-  postalCode?: number;
   avatar: avatar;
   resetPasswordToken: string;
   resetPasswordExpire: Date;
   yourSelf?: string;
   roles: IRoles[];
   gender: "male" | "female";
-  dob?: Date;
-  age?: number;
   getJWTToken: () => string;
   comparePassword: (password: string) => Promise<boolean>;
 }
 export interface ILawyer {
   user: ObjectId;
-  designation: string;
-  experience: number;
+  phoneNumber: number;
+  gigs: ObjectId[];
+  numOfReviews: number;
+  professionalInfo: {
+    lawFirmName: string;
+    title: string;
+    barAdmission: {
+      state: string;
+      liscenseNumber: string;
+    };
+    experience: string;
+  };
+
+  isVerified: boolean;
+  availability: {
+    officeHours: string;
+    days: string[];
+  };
   education: string;
-  phone: number;
-  yourSelf: string;
-  address: string;
-  documents: avatar[];
-  gender: "male" | "female";
-  dob: Date;
-  cnic: number;
-  age: number;
+  
 }
 export interface IClient {
   user: ObjectId;
@@ -90,4 +96,32 @@ export interface updateAuthenticatedRequest extends Request {
 
 export interface DecodedJwtPayload extends JwtPayload {
   id: string;
+}
+export interface IUpdatedLawyer{
+  phoneNumber: number;
+  gigs: ObjectId[];
+  numOfReviews: number;
+  professionalInfo: {
+    lawFirmName: string;
+    title: string;
+    barAdmission: {
+      state: string;
+      liscenseNumber: string;
+    };
+    experience: string;
+  };
+
+  isVerified: boolean;
+  availability: {
+    officeHours: string;
+    days: string[];
+  };
+  education: string;
+
+}
+
+export interface IUpdateAuthenticatedLawyerRequest extends Request {
+  user?:IUser  | null;
+  body:IUpdatedLawyer
+  
 }
