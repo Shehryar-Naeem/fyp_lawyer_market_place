@@ -27,7 +27,7 @@ const City = ({ compData, show, setshow }) => {
   return (
     <div className='profile-edit-container'>
       <GooglePlacesAutocomplete 
-      apiKey={"AIWzaWDSyBswGWfpXCGEZzpSxmIbDDw6VK41zagfnUvW9AEk"}
+      apiKey={""}
       selectProps={{
         
           city,
