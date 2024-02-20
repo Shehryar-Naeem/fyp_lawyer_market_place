@@ -45,9 +45,12 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     roles: [
       {
-        type: String,
-        enum: ["client", "admin", "lawyer"],
-        default: "client", // Default role is set to "client"
+        _id: mongoose.Types.ObjectId,
+        roleType: {
+          type: String,
+          enum: ["client", "lawyer", "admin"],
+          default: "client",
+        },
       },
     ],
     gender: {
@@ -69,14 +72,12 @@ const userSchema = new mongoose.Schema<IUser>(
   }
 );
 
-
-
 userSchema.pre("save", async function (next) {
   // const clientId = new mongoose.Types.ObjectId();
   // const lawyerId = new mongoose.Types.ObjectId();
 
   const hasClientRole = this.roles.some((role) => role.roleType === "client");
-  const hasLawyerRole = this.roles.some((role) => role.roleType === "lawyer");
+  // const hasLawyerRole = this.roles.some((role) => role.roleType === "lawyer");
 
   if (!hasClientRole) {
     const clientId = new mongoose.Types.ObjectId();
@@ -85,12 +86,12 @@ userSchema.pre("save", async function (next) {
     await client.save();
   }
 
-  if (!hasLawyerRole) {
-    const lawyerId = new mongoose.Types.ObjectId();
-    this.roles.push({ _id: lawyerId, roleType: "lawyer" });
-    const lawyer = new Lawyer({ _id: lawyerId, user: this._id });
-    await lawyer.save();
-  }
+  // if (!hasLawyerRole) {
+  //   const lawyerId = new mongoose.Types.ObjectId();
+  //   this.roles.push({ _id: lawyerId, roleType: "lawyer" });
+  //   const lawyer = new Lawyer({ _id: lawyerId, user: this._id });
+  //   await lawyer.save();
+  // }
 
   // Add both client and lawyer roles to the user
   // this.roles.push({ _id: clientId, roleType: "client" });

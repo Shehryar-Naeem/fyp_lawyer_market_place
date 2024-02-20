@@ -1,10 +1,11 @@
 import express from "express";
 import {
+  CreateUser,
   // completeLawyerProfile,
   deleteUserByAdmin,
   getAllUser,
   getProfleData,
-  loginOrCreateUser,
+  loginUser,
   logout,
   updateProfile,
 } from "../controller/userController.js";
@@ -15,7 +16,8 @@ import {
 
 const router = express.Router();
 
-router.route("/login-or-register").post(loginOrCreateUser);
+router.route("/login-or-register").post(CreateUser);
+router.route("/login-user").post(loginUser);
 router.route("/logout").get(isAuthenticatedUser, logout);
 // // router.route("/save-profle").post(isAuthenticatedUser, completeLawyerProfile);
 router.route("/get-profle").get(isAuthenticatedUser, getProfleData);
@@ -29,7 +31,5 @@ router.route("/update-login-detail").put(isAuthenticatedUser, updateProfile);
 //   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteUserByAdmin);
 
 export default router;
-
-
 
 // Path: backend/src/controller/userController.ts

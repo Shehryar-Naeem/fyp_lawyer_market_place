@@ -4,6 +4,34 @@ import { IUpdateAuthenticatedLawyerRequest } from "../types/types.js";
 import { User } from "../models/userModel/userModel.js";
 import { ErrorHandler } from "../utils/utility-class.js";
 import { Lawyer } from "../models/userModel/laywerModel.js";
+import mongoose from "mongoose";
+
+const createLawyer = TryCatch(
+  async (
+    req: IUpdateAuthenticatedLawyerRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const userId = req.user?._id;
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return next(new ErrorHandler("user not found", 404));
+    }
+    const hasLawyerRole = user.roles.some((role) => role.roleType === "lawyer");
+
+    if (hasLawyerRole) {
+      return next(new ErrorHandler("Lawyer already exists", 400));
+    }
+    const lawyerId = new mongoose.Types.ObjectId();
+    user.roles.push({ _id: lawyerId, roleType: "lawyer" });
+    const lawyer = new Lawyer({ _id: lawyerId, user: user?._id });
+    await lawyer.save();
+    res.status(201).json({
+      success: true,
+      message: "Lawyer created successfully",
+    });
+  }
+);
 
 const completeLawyer = TryCatch(
   async (
@@ -12,6 +40,7 @@ const completeLawyer = TryCatch(
     next: NextFunction
   ) => {
     const userId = req.user?._id;
+    const roleParms = req.params?.role;
     const user = await User.findOne({ _id: userId });
     if (!user) {
       return next(new ErrorHandler("user not found", 404));
@@ -46,4 +75,4 @@ const completeLawyer = TryCatch(
   }
 );
 
-export { completeLawyer };
+export { completeLawyer, createLawyer };

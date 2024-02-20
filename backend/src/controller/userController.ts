@@ -12,7 +12,7 @@ import { TryCatch } from "../middleware/error.js";
 import { ErrorHandler } from "../utils/utility-class.js";
 import sendToken from "../utils/jwtToken.js";
 
-const loginOrCreateUser = async (
+const CreateUser = async (
   req: Request<{}, {}, NewUserRequestBody>,
   res: Response,
   next: NextFunction
@@ -24,7 +24,7 @@ const loginOrCreateUser = async (
       $regex: email,
       $options: "i",
     },
-  }).select("+password");
+  });
 
   if (!existingUser) {
     const newUser = await User.create({
@@ -38,17 +38,33 @@ const loginOrCreateUser = async (
 
     sendToken(newUser as CombinedType, 201, res, msg);
   } else {
-    const isPasswordMatched = await existingUser.comparePassword(password);
+    return next(new ErrorHandler("User already exists", 400));
+  }
+};
+const loginUser = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new ErrorHandler("Please enter email & password", 400));
+    }
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user) {
+      return next(new ErrorHandler("Invalid email or password", 401));
+    }
+
+    const isPasswordMatched = await user.comparePassword(password);
 
     if (!isPasswordMatched) {
       return next(new ErrorHandler("Invalid email or password", 401));
     }
     const msg: string = "user login Successfully";
 
-    sendToken(existingUser as CombinedType, 201, res, msg);
+    sendToken(user as CombinedType, 200, res, msg);
   }
-};
-
+);
 // const completeLawyerProfile = TryCatch(
 //   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
 //     const id = req.user?._id;
@@ -148,6 +164,7 @@ const getProfleData = TryCatch(
     });
   }
 );
+
 const logout = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     res.cookie("token", null, {
@@ -160,6 +177,7 @@ const logout = TryCatch(
     });
   }
 );
+
 const updateProfile = TryCatch(
   async (
     req: updateAuthenticatedRequest,
@@ -193,6 +211,7 @@ const updateProfile = TryCatch(
     }
   }
 );
+
 const getAllUser = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const users = await User.find();
@@ -205,6 +224,7 @@ const getAllUser = TryCatch(
     });
   }
 );
+
 const updateProfileByadmin = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
@@ -230,6 +250,7 @@ const updateProfileByadmin = TryCatch(
     });
   }
 );
+
 const deleteUserByAdmin = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
@@ -245,8 +266,10 @@ const deleteUserByAdmin = TryCatch(
     });
   }
 );
+
 export {
-  loginOrCreateUser,
+  CreateUser,
+  loginUser,
   getProfleData,
   logout,
   updateProfile,
