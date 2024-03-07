@@ -18,17 +18,20 @@ export interface IUser {
   password: string;
   city?: string;
   avatar: avatar;
-  resetPasswordToken: string;
-  resetPasswordExpire: Date;
+  resetPasswordToken: string | undefined;
+  resetPasswordExpire: Date | undefined;
   yourSelf?: string;
   roles: IRoles[];
   gender: "male" | "female";
   getJWTToken: () => string;
   comparePassword: (password: string) => Promise<boolean>;
+  getResetPasswordToken: () => string;
 }
 export interface ILawyer {
   user: ObjectId;
   phoneNumber: number;
+  yourSelf: string;
+  services: string[];
   gigs: ObjectId[];
   numOfReviews: number;
   professionalInfo: {

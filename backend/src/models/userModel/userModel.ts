@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Client } from "./clientModel.js";
 import { Lawyer } from "./laywerModel.js";
+import crypto from "crypto"
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -122,6 +123,16 @@ userSchema.methods.getJWTToken = function () {
 
   return token;
 };
+
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.resetPasswordExpire = new Date(Date.now() + 30 * 60 * 1000);
+  return resetToken;
+}
 const User = mongoose.model<IUser>("User", userSchema);
 
 export { User };

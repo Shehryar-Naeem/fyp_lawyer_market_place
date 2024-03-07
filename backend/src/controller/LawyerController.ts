@@ -13,7 +13,9 @@ const createLawyer = TryCatch(
     next: NextFunction
   ) => {
     const userId = req.user?._id;
+
     const user = await User.findOne({ _id: userId });
+
     if (!user) {
       return next(new ErrorHandler("user not found", 404));
     }
@@ -24,6 +26,8 @@ const createLawyer = TryCatch(
     }
     const lawyerId = new mongoose.Types.ObjectId();
     user.roles.push({ _id: lawyerId, roleType: "lawyer" });
+
+    await user.save();
     const lawyer = new Lawyer({ _id: lawyerId, user: user?._id });
     await lawyer.save();
     res.status(201).json({
@@ -40,7 +44,7 @@ const completeLawyer = TryCatch(
     next: NextFunction
   ) => {
     const userId = req.user?._id;
-    const roleParms = req.params?.role;
+
     const user = await User.findOne({ _id: userId });
     if (!user) {
       return next(new ErrorHandler("user not found", 404));

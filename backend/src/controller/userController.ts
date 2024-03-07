@@ -7,10 +7,12 @@ import {
   NewUserRequestBody,
   updateAuthenticatedRequest,
 } from "../types/types.js";
+import sendMail from "../utils/sendMail.js";
 import { User } from "../models/userModel/userModel.js";
 import { TryCatch } from "../middleware/error.js";
 import { ErrorHandler } from "../utils/utility-class.js";
 import sendToken from "../utils/jwtToken.js";
+import crypto from "crypto";
 
 const CreateUser = async (
   req: Request<{}, {}, NewUserRequestBody>,
@@ -41,6 +43,7 @@ const CreateUser = async (
     return next(new ErrorHandler("User already exists", 400));
   }
 };
+
 const loginUser = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
@@ -65,6 +68,7 @@ const loginUser = TryCatch(
     sendToken(user as CombinedType, 200, res, msg);
   }
 );
+
 // const completeLawyerProfile = TryCatch(
 //   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
 //     const id = req.user?._id;
@@ -152,6 +156,8 @@ const loginUser = TryCatch(
 
 const getProfleData = TryCatch(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    console.log(req.user?._id);
+    
     const id = req.user?._id;
     const user = await User.findById({ _id: id });
     if (!user) {
@@ -212,6 +218,78 @@ const updateProfile = TryCatch(
   }
 );
 
+const forgetPassword = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+    const resetToken = user.getResetPasswordToken();
+    await user.save({ validateBeforeSave: false });
+    const resetUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/api/user/resetpassword/${resetToken}`;
+    const message = `Your password reset token is as follow:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`;
+    try {
+      await sendMail(user.email, "Password reset token", message);
+      res.status(200).json({
+        success: true,
+        message: `Email sent to ${user.email}`,
+      });
+    } catch (error) {
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      return next(new ErrorHandler("Email could not be sent", 500));
+    }
+  }
+);
+
+const restPassword = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+    if (!user) {
+      return next(new ErrorHandler("Invalid token", 400));
+    }
+    if (req.body.password !== req.body.confirmPassword) {
+      return next(new ErrorHandler("Password does not match", 400));
+    }
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  }
+);
+
+const updatePasswrord = TryCatch(
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const user = await User.findById(req.user?._id).select("+password");
+    const isMatch = await user?.comparePassword(req.body.oldPassword);
+    if (!isMatch) {
+      return next(new ErrorHandler("Old password is incorrect", 400));
+    }
+    if (req.body.newPassword !== req.body.confirmPassword) {
+      return next(new ErrorHandler("password does not match", 400));
+    }
+    user!.password = req.body.newPassword;
+
+    await user!.save();
+    const msg: string = "Password updated successfully";
+    sendToken(user as CombinedType, 200, res, msg);
+  }
+);
+
 const getAllUser = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const users = await User.find();
@@ -267,6 +345,8 @@ const deleteUserByAdmin = TryCatch(
   }
 );
 
+
+
 export {
   CreateUser,
   loginUser,
@@ -276,4 +356,7 @@ export {
   getAllUser,
   deleteUserByAdmin,
   updateProfileByadmin,
+  forgetPassword,
+  restPassword,
+  updatePasswrord,
 };

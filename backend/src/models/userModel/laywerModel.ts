@@ -9,10 +9,6 @@ const LawyerSchema = new mongoose.Schema<ILawyer>(
       required: true,
       unique: true,
     },
-    phoneNumber: {
-      type: Number,
-      required: false,
-    },
     availability: {
       officeHours: {
         type: String,
@@ -22,6 +18,14 @@ const LawyerSchema = new mongoose.Schema<ILawyer>(
         type: [String],
         required: false,
       },
+    },
+    services: {
+      type: [String],
+      required: false,
+    },
+    yourSelf: {
+      type: String,
+      required: false,
     },
     professionalInfo: {
       lawFirmName: {

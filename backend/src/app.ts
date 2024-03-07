@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { errorMiddlerware } from "./middleware/error.js";
 import userRouter from "./routes/userRoute.js";
 import lawyerRouter from "./routes/lawyerRoute.js";
+import gigRouter from "./routes/gigRoute.js";
 import cors from "cors";
 // require("dotenv").config();
 dotenv.config();
@@ -19,6 +20,7 @@ connectDb(db);
 
 app.use("/api/user", userRouter);
 app.use("/api/lawyer", lawyerRouter);
+app.use("/api/gig", gigRouter);
 
 const port = process.env.PORT || 4000;
 app.use(errorMiddlerware);
