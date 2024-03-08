@@ -1,12 +1,23 @@
 import mongoose from "mongoose";
+const validateTitleLength = (title: string) => {
+  const words = title.split(" ");
+  // return words.length <= 8;
+
+  return words.length >= 3 && words.length <= 8;
+};
+const valiateDiscriptionLength = (discription: string) => {
+  const words = discription.split(" ");
+  return words.length >= 30 && words.length <= 100;
+};
+
 const pricingAndServiceSchema = new mongoose.Schema({
   basic: {
     price: {
       type: Number,
-      required: [true, "Please enter basic price for the gig"],
+      default: 0,
     },
     services: {
-      includedFeatures: {
+      includeServices: {
         type: [String],
         default: [],
       },
@@ -15,21 +26,24 @@ const pricingAndServiceSchema = new mongoose.Schema({
       },
       name: {
         type: String,
-        required: true,
+        default: null,
       },
       description: {
         type: String,
-        required: true,
+        default: null,
       },
+    },
+    additionalCosts: {
+      type: [String],
+      default: [],
     },
   },
   standard: {
     price: {
       type: Number,
-      required: [true, "Please enter basic price for the gig"],
     },
     services: {
-      includedFeatures: {
+      includeServices: {
         type: [String],
         default: [],
       },
@@ -38,21 +52,25 @@ const pricingAndServiceSchema = new mongoose.Schema({
       },
       name: {
         type: String,
-        required: true,
+        default: null,
       },
       description: {
         type: String,
-        required: true,
+        default: null,
       },
+    },
+    additionalCosts: {
+      type: [String],
+      default: [],
     },
   },
   premium: {
     price: {
       type: Number,
-      required: [true, "Please enter basic price for the gig"],
+      default: 0,
     },
     services: {
-      includedFeatures: {
+      includeServices: {
         type: [String],
         default: [],
       },
@@ -61,39 +79,41 @@ const pricingAndServiceSchema = new mongoose.Schema({
       },
       name: {
         type: String,
-        required: true,
+        default: null,
       },
       description: {
         type: String,
-        required: true,
+        default: null,
       },
     },
-  },
-  additionalCosts: {
-    type: [String],
-    default: [],
+    additionalCosts: {
+      type: [String],
+      default: [],
+    },
   },
 });
 const gigsSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "Please enter title for the gig"],
+      validate: [validateTitleLength, "Title must have between 3 and 8 words"],
     },
     description: {
       type: String,
-      required: [true, "Please enter description for the gig"],
+      validate: [
+        valiateDiscriptionLength,
+        "Description must have between 30 and 100 words",
+      ],
     },
     pricing: {
       type: pricingAndServiceSchema,
-      required: true,
+      default: {},
     },
 
     images: [
       {
         public_id: {
           type: String,
-          required: true,
         },
         url: {
           type: String,
@@ -103,8 +123,7 @@ const gigsSchema = new mongoose.Schema(
     ],
 
     category: {
-      type: String,
-      required: [true, "Please enter category for the gig"],
+      type: [String],
     },
     reviews: [
       {
@@ -127,16 +146,20 @@ const gigsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
     lawyer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Lawyer",
+      unique: true,
     },
   },
   {
     timestamps: true,
+   
   }
 );
+
 
 const Gig = mongoose.model("Gig", gigsSchema);
 export { Gig };

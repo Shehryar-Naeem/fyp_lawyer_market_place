@@ -11,7 +11,7 @@ export interface IRoles {
   roleType: "client" | "lawyer" | "admin";
 }
 
-export interface IUser {
+export interface  IUser {
   _id: string;
   name: string;
   email: string;
@@ -128,3 +128,4 @@ export interface IUpdateAuthenticatedLawyerRequest extends Request {
   body:IUpdatedLawyer
   
 }
+

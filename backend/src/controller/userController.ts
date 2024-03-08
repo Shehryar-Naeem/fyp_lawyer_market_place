@@ -345,8 +345,6 @@ const deleteUserByAdmin = TryCatch(
   }
 );
 
-
-
 export {
   CreateUser,
   loginUser,
