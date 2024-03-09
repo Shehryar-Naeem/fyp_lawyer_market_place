@@ -33,6 +33,18 @@ export const authorizeToLawyer = TryCatch(
     next();
   }
 );
+export const authorizeToAdmin = TryCatch( 
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const user = req.user?.roles.find((role) => role.roleType === "admin");
+    if (!user) {
+      return next(
+        new ErrorHandler("You are not authorized to access this resource", 403)
+      );
+    }
+    next();
+  }
+);
+
 
 // export const authorizeRoles = (...roles: string[]) => {
 //   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

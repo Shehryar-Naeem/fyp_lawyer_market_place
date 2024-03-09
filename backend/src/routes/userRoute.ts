@@ -38,4 +38,3 @@ router.route("/update-login-detail").put(isAuthenticatedUser, updateProfile);
 
 export default router;
 
-// Path: backend/src/controller/userController.ts

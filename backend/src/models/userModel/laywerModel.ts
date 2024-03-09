@@ -19,36 +19,33 @@ const LawyerSchema = new mongoose.Schema<ILawyer>(
         required: false,
       },
     },
-    services: {
-      type: [String],
-      required: false,
-    },
+
     yourSelf: {
       type: String,
-      required: false,
+      default: null,
     },
     professionalInfo: {
       lawFirmName: {
         type: String,
-        required: false,
+        default: null,
       },
       title: {
         type: String,
-        required: false,
+        default: null,
       },
       barAdmission: {
         state: {
           type: String,
-          required: false,
+          default: null,
         },
         liscenseNumber: {
           type: String,
-          required: false,
+          default: null,
         },
       },
       experience: {
         type: String,
-        required: false,
+        default: null,
       },
     },
     isVerified: {
@@ -58,6 +55,7 @@ const LawyerSchema = new mongoose.Schema<ILawyer>(
     education: {
       type: String,
       required: false,
+      default: null,
     },
     numOfReviews: {
       type: Number,
@@ -65,7 +63,7 @@ const LawyerSchema = new mongoose.Schema<ILawyer>(
     },
     gigs: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, // Use mongoose.Schema.Types.ObjectId here
         ref: "Gig",
       },
     ],

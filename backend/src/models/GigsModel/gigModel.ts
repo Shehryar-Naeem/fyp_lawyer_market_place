@@ -146,12 +146,12 @@ const gigsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true,
+      // unique: true,
     },
     lawyer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Lawyer",
-      unique: true,
+      required: true,
     },
   },
   {
@@ -159,6 +159,8 @@ const gigsSchema = new mongoose.Schema(
    
   }
 );
+
+
 
 
 const Gig = mongoose.model("Gig", gigsSchema);

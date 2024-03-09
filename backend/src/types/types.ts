@@ -11,7 +11,7 @@ export interface IRoles {
   roleType: "client" | "lawyer" | "admin";
 }
 
-export interface  IUser {
+export interface IUser {
   _id: string;
   name: string;
   email: string;
@@ -32,7 +32,7 @@ export interface ILawyer {
   phoneNumber: number;
   yourSelf: string;
   services: string[];
-  gigs: ObjectId[];
+  gigs: mongoose.Types.ObjectId[];
   numOfReviews: number;
   professionalInfo: {
     lawFirmName: string;
@@ -50,7 +50,6 @@ export interface ILawyer {
     days: string[];
   };
   education: string;
-  
 }
 export interface IClient {
   user: ObjectId;
@@ -100,32 +99,7 @@ export interface updateAuthenticatedRequest extends Request {
 export interface DecodedJwtPayload extends JwtPayload {
   id: string;
 }
-export interface IUpdatedLawyer{
-  phoneNumber: number;
-  gigs: ObjectId[];
-  numOfReviews: number;
-  professionalInfo: {
-    lawFirmName: string;
-    title: string;
-    barAdmission: {
-      state: string;
-      liscenseNumber: string;
-    };
-    experience: string;
-  };
-
-  isVerified: boolean;
-  availability: {
-    officeHours: string;
-    days: string[];
-  };
-  education: string;
-
-}
 
 export interface IUpdateAuthenticatedLawyerRequest extends Request {
-  user?:IUser  | null;
-  body:IUpdatedLawyer
-  
+  user?: IUser | null;
 }
-
