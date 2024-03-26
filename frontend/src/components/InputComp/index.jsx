@@ -1,23 +1,18 @@
 import React from "react";
-
-const InputComp = ({text,value,onChange}) => {
+import { FloatingLabel } from "flowbite-react";
+const InputComp = ({ text, type, name, register }) => {
   return (
-    <div class="relative">
-      <input
-        type={text}
-        value={value}
-        onChange={onChange}
-        id={text}
-        class="block px-2.5 pb-2.5 pt-4 w-full md:text-lg text-sm text-black bg-transparent rounded-lg border-1 border-black appearance-none dark:text-white dark:border-white dark:focus:border-black 0 focus:outline-none focus:ring-0 focus:border-black peer"
-        placeholder=""
+    <div className="relative">
+      <FloatingLabel
+        variant="outlined"
+        label={text.charAt(0).toUpperCase() + text.slice(1)}
+     
+        name={name}
+        type={type}
+        {...register(name)}
+        className="peer md:px-2 px-1 text-light-gray active:border-black focus:border-black border-light-gray lg:text-xl md:text-base sm:text-sm text-xs lg:peer-focus:text-lg md:peer-focus:text-sm peer-focus:text-xs lg:peer-focus:-translate-y-5 peer-focus:text-black active:text-black "
+        sizing={"sm"}
       />
-      <label
-        for={text}
-        class="absolute capitalize md:text-lg text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-1 z-10 origin-[0] bg-white peer-focus:bg-primary dark:bg-gray-900 px-2 peer-focus:mx-2 peer-focus:px-2 peer-focus:py-0 peer-focus:text-white peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 leading-none"
-      
-      >
-        {text}
-      </label>
     </div>
   );
 };

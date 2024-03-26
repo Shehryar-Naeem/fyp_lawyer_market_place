@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,6 +12,7 @@ body {
   line-height: 1.5;
   min-height: 100vh;
   height: 100%;
+  font-family: "Red Hat Display", sans-serif;
 }
 #root {
   position: absolute;
@@ -42,20 +44,25 @@ input[type="number"] {
     margin: 0 auto;
   }
   .black-btn {
-    @apply bg-black text-white w-full md:text-xl md:font-bold  font-semibold text-sm md:mx-auto md:py-3 py-2 md:px-4 px-2 rounded-md uppercase md:hover:shadow-2xl shadow-none md:cursor-pointer cursor-none;
+    @apply bg-black text-white w-full md:text-xl md:font-bold font-semibold text-sm md:mx-auto md:py-3 py-2 md:px-4 px-2 rounded-md uppercase md:hover:shadow-2xl shadow-none md:cursor-pointer cursor-none item-center;
   }
   .item-center {
     @apply flex items-center justify-center;
   }
-  .gray-btn{
-    @apply text-white capitalize w-full bg-gray-600 md:focus:ring-4 md:focus:ring-gray-400 focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800
+  .gray-btn {
+    @apply text-white capitalize w-full bg-gray-600 md:focus:ring-4 md:focus:ring-gray-400 focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800;
   }
-  .blue-btn{
-    @apply text-white bg-blue-700 w-full capitalize hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800
-  
+  .blue-btn {
+    @apply text-white bg-blue-700 w-full capitalize hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800;
   }
-  .profile-edit-container{
-    @apply bg-gray-200 rounded-md md:p-sm-ly-pad p-0.5 flex flex-col gap-sm
+  .profile-edit-container {
+    @apply bg-gray-200 rounded-md md:p-sm-ly-pad p-0.5 flex flex-col gap-sm;
+  }
+  .tab {
+    @apply text-black flex-1 lg:p-1 md:p-sm-ly-pad p-0.5 capitalize lg:text-xl md:text-base text-sm md:font-bold font-semibold lg:rounded-md rounded-1;
+  }
+  .underline-tab {
+    @apply text-black text-nowrap lg:p-1 md:p-sm-ly-pad p-0.5 capitalize lg:text-xl md:text-base text-sm md:font-bold font-semibold;
   }
 }
 
@@ -68,10 +75,10 @@ input[type="number"] {
     @apply py-4;
   }
   .fieldset-border {
-    @apply border-2 border-slate-gray border-solid rounded-md md:p-6 p-3 shadow-2xl grid md:grid-cols-2 grid-cols-1 gap-2;
+    @apply relative lg:border-2 md:border-1 border-1 border-slate-gray border-solid md:rounded-sm  sm:rounded-xs rounded-xs md:p-6 p-3;
   }
   .field-legend {
-    @apply capitalize p-2 bg-slate-gray leading-none lg:text-2xl  md:text-xl text-sm md:font-bold font-semibold;
+    @apply absolute top-0 left-0 ml-3 lg:-mt-3 md:-mt-2  -mt-1 capitalize lg:p-lg md:p-md sm:p-sm p-xs bg-slate-gray leading-none xl:text-lg lg:text-base md:text-sm text-xs xl:font-extrabold lg:font-bold md:font-semibold font-medium md:rounded-xs rounded-xxs;
   }
   .input-lable {
     @apply block mb-2 md:text-lg  text-sm font-medium text-primary dark:text-green-500 capitalize;
@@ -100,11 +107,68 @@ input[type="number"] {
   .flex-column {
     @apply flex md:flex-row flex-col;
   }
-  
+  .f-col {
+    @apply flex flex-col;
+  }
+
+  .card-h {
+    @apply lg:h-c-img-h md:h-md-c-img-h h-sm-c-img-h;
+  }
+  .min-card-h{
+    @apply lg:h-min-c-img-h md:h-md-min-c-img-h h-sm-min-c-img-h;
+  }
+  .card-text {
+    @apply text-black md:text-base text-sm font-medium capitalize;
+  }
+  .tag-text {
+    @apply text-black md:text-sm text-xs font-medium capitalize bg-gray-300 lg:p-3xl md:p-2xl sm:p-xl p-lg leading-none rounded-1;
+  }
+  .info-label-gap{
+    @apply flex md:gap-1 gap-sm md:overflow-hidden overflow-auto;
+  }
+  .info-label-text-bold {
+    @apply text-black md:text-base sm:text-sm text-xs font-bold capitalize text-nowrap;
+  }
+  .info-label-text {
+    @apply text-black md:text-base sm:text-sm text-xs font-normal capitalize text-nowrap;
+  }
+  .white-shadow {
+    @apply shadow-2xl bg-white; 
+  }
+  .gray-circle {
+    @apply bg-gray-300 lg:text-base md:text-sm text-xs rounded-full lg:h-8 lg:w-8 md:h-6 md:w-6 w-4 h-4 item-center md:cursor-pointer;
+  }
 }
 
 @media screen and (max-width: 912px) {
   #root {
     position: relative;
+  }
+}
+.tab.react-tabs__tab--selected {
+  @apply bg-black text-white transition-all;
+  animation: fadeIn 0.5s ease;
+
+  /* Adjust the duration and timing function as needed */
+}
+.underline-tab.active {
+  @apply md:border-b-[3px] border-b-1 border-solid border-black outline-none;
+  animation: fadeIn 0.5s ease;
+}
+
+.react-tabs__tab-panel--selected {
+  @apply transition-all;
+
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }
